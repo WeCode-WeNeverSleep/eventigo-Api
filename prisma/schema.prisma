@@ -8,7 +8,7 @@ generator client {
 }
 
 model User {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid()) @db.Uuid
   email     String   @unique
   password  String
   name      String
@@ -18,15 +18,15 @@ model User {
 }
 
 model Event {
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid()) @db.Uuid
   title       String
   description String?  @db.Text
   startDate   DateTime
   endDate     DateTime
   location    String
 
-  organizer   User      @relation(fields: [organizerId], references: [id])
-  organizerId String
+  organizer   User      @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  organizerId String @db.Uuid
   sessions    Session[]
 
   createdAt DateTime @default(now())
@@ -34,13 +34,13 @@ model Event {
 }
 
 model Room {
-  id       String    @id @default(cuid())
+  id       String    @id @default(uuid()) @db.Uuid
   name     String    @unique
   sessions Session[]
 }
 
 model Session {
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid()) @db.Uuid
   title       String
   description String?  @db.Text
   startTime   DateTime
@@ -48,11 +48,10 @@ model Session {
   capacity    Int?
 
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  eventId String
+  eventId String @db.Uuid
 
   room   Room   @relation(fields: [roomId], references: [id])
-  roomId String
-
+  roomId String @db.Uuid
   speakers  Speaker[]
   questions Question[]
 
@@ -63,7 +62,7 @@ model Session {
 }
 
 model Speaker {
-  id        String  @id @default(cuid())
+  id        String  @id @default(uuid()) @db.Uuid
   fullName  String
   avatarUrl String?
   bio       String? @db.Text
@@ -76,13 +75,13 @@ model Speaker {
 }
 
 model Question {
-  id         String  @id @default(cuid())
+  id         String  @id @default(uuid()) @db.Uuid
   content    String  @db.Text
   authorName String? @default("Anonyme")
   upvotes    Int     @default(0)
 
   session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  sessionId String
+  sessionId String @db.Uuid
 
   createdAt DateTime @default(now())
 }
