@@ -1,0 +1,47 @@
+{
+  "name": "eventsync-web3-api",
+  "version": "1.0.0",
+  "description": "Backend for EventIGo",
+  "homepage": "https://github.com/WeCode-WeNeverSleep/EventSync-WEB3-API#readme",
+  "bugs": {
+    "url": "https://github.com/WeCode-WeNeverSleep/EventSync-WEB3-API/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WeCode-WeNeverSleep/EventSync-WEB3-API.git"
+  },
+  "license": "ISC",
+  "author": "Jessy, Rindra, Manda, Mayah",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.ts",
+    "db:migrate": "npx prisma migrate dev",
+    "db:generate": "npx prisma generate",
+    "db:studio": "npx prisma studio"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.6.0",
+    "@types/socket.io": "^3.0.1",
+    "prisma": "^7.8.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.8.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "socket.io": "^4.8.3",
+    "zod": "^4.4.1"
+  }
+}
