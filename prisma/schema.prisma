@@ -1,6 +1,5 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -26,7 +25,7 @@ model Event {
   location    String
 
   organizer   User      @relation(fields: [organizerId], references: [id], onDelete: Cascade)
-  organizerId String @db.Uuid
+  organizerId String    @db.Uuid
   sessions    Session[]
 
   createdAt DateTime @default(now())
@@ -50,8 +49,8 @@ model Session {
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
   eventId String @db.Uuid
 
-  room   Room   @relation(fields: [roomId], references: [id])
-  roomId String @db.Uuid
+  room      Room       @relation(fields: [roomId], references: [id])
+  roomId    String     @db.Uuid
   speakers  Speaker[]
   questions Question[]
 
@@ -81,7 +80,7 @@ model Question {
   upvotes    Int     @default(0)
 
   session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
-  sessionId String @db.Uuid
+  sessionId String  @db.Uuid
 
   createdAt DateTime @default(now())
 }
