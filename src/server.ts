@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
+import authRoutes from './routes/admin.routes.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,26 +12,12 @@ const prisma = new PrismaClient();
 app.use(cors());
 app.use(express.json());
 
+app.use('/auth', authRoutes);
+
 app.get("/", (req, res) => {
     res.json({
         message: "EventSync API is running",
     });
-});
-
-app.get("/test-db", async (req, res) => {
-    try {
-        const result = await prisma.$queryRaw`SELECT 1`;
-
-        res.json({
-            message: "Database connected",
-            result,
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: "Database connection failed",
-        });
-    }
 });
 
 app.listen(PORT, () => {
