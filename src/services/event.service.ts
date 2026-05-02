@@ -23,4 +23,25 @@ export class EventService {
       },
     });
   }
+
+  static async getEventById(id: string) {
+    return await prisma.event.findUnique({
+      where: { id },
+      include: {
+        organizer: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        sessions: {
+          include: {
+            room: true,
+            speakers: true,
+          },
+        },
+      },
+    });
+  }
 }
