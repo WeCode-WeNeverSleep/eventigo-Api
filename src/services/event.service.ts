@@ -1,13 +1,8 @@
 import prisma from "../lib/prisma.js";
-import type { GetEventsQuery } from "../schemas/event.schema.js";
 
 export class EventService {
-  static async getEvents(params: GetEventsQuery) {
-    const { limit, offset } = params;
-
+  static async getEvents() {
     return await prisma.event.findMany({
-      take: limit,
-      skip: offset,
       include: {
         organizer: {
           select: {
