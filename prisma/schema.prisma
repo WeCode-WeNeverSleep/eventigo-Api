@@ -1,0 +1,87 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  password  String
+  name      String
+  events    Event[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Event {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String
+  description String?  @db.Text
+  startDate   DateTime
+  endDate     DateTime
+  location    String
+
+  organizer   User      @relation(fields: [organizerId], references: [id], onDelete: Cascade)
+  organizerId String    @db.Uuid
+  sessions    Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Room {
+  id       String    @id @default(uuid()) @db.Uuid
+  name     String    @unique
+  sessions Session[]
+}
+
+model Session {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String
+  description String?  @db.Text
+  startTime   DateTime
+  endTime     DateTime
+  capacity    Int?
+
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId String @db.Uuid
+
+  room      Room       @relation(fields: [roomId], references: [id])
+  roomId    String     @db.Uuid
+  speakers  Speaker[]
+  questions Question[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([startTime, endTime])
+}
+
+model Speaker {
+  id        String  @id @default(uuid()) @db.Uuid
+  fullName  String
+  avatarUrl String?
+  bio       String? @db.Text
+  links     Json?
+
+  sessions Session[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Question {
+  id         String  @id @default(uuid()) @db.Uuid
+  content    String  @db.Text
+  authorName String? @default("Anonyme")
+  upvotes    Int     @default(0)
+
+  session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  sessionId String  @db.Uuid
+
+  createdAt DateTime @default(now())
+}
