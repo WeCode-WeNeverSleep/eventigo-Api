@@ -1,9 +1,11 @@
 import type {Request, Response} from 'express';
 import { AuthService } from '../services/auth.service.js';
+import {loginSchema} from "../schemas/auth.schema.js";
 
 export const loginController = async (req: Request, res: Response) => {
     try {
-        const { email, password } = req.body;
+        const parsed = loginSchema.parse(req.body);
+        const { email, password } = parsed;
 
         const result = await AuthService.validateLogin(email, password);
 
