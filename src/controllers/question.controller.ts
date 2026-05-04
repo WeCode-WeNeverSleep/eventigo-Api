@@ -1,5 +1,7 @@
-import { Router, Request, Response, NextFunction } from "express";
-import { CreateQuestionDto, QuestionError } from "../types/Question.js";
+import { Router } from "express";
+import type { Request, Response, NextFunction } from "express";
+import type { CreateQuestionDto } from "../types/Question.js";
+import { QuestionError } from "../types/Question.js";
 import { listQuestions, createQuestion, upvoteQuestion } from "../services/question.service.js";
 
 async function fetchIsSessionLive(sessionId: string): Promise<boolean> {
@@ -13,7 +15,12 @@ router.get(
   "/sessions/:sessionId/questions",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { sessionId } = req.params;
+      const sessionId = req.params["sessionId"];
+      if (!sessionId || Array.isArray(sessionId)) {
+        res.status(400).json({ error: "sessionId is required." });
+        return;
+      }
+
       const questions = listQuestions(sessionId);
       res.status(200).json(questions);
     } catch (err) {
@@ -26,10 +33,15 @@ router.post(
   "/sessions/:sessionId/questions",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { sessionId } = req.params;
+      const sessionId = req.params["sessionId"];
+      if (!sessionId || Array.isArray(sessionId)) {
+        res.status(400).json({ error: "sessionId is required." });
+        return;
+      }
+
       const dto: CreateQuestionDto = {
         content: req.body.content,
-        authorName: req.body.authorName,  
+        authorName: req.body.authorName,
       };
 
       if (!dto.content || typeof dto.content !== "string") {
@@ -55,9 +67,13 @@ router.post(
   "/questions/:questionId/upvote",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { questionId } = req.params;
-      const updated = upvoteQuestion(questionId);
+      const questionId = req.params["questionId"];
+      if (!questionId || Array.isArray(questionId)) {
+        res.status(400).json({ error: "questionId is required." });
+        return;
+      }
 
+      const updated = upvoteQuestion(questionId);
       if (!updated) {
         res.status(404).json({ error: `Question ${questionId} not found.` });
         return;
