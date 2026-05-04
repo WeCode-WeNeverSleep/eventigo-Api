@@ -1,54 +1,54 @@
-import { QuestionError } from "../types/Question.js";
 import type { CreateQuestionDto, Question } from "../types/Question.js";
+import { QuestionError } from "../types/Question.js";
+import  prisma  from "../lib/prisma.js";
 
-const store = new Map<string, Question[]>(); 
-const questionIndex = new Map<string, Question>();
-
-function generateId(): string {
-  return `q_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+export async function listQuestions(sessionId: string): Promise<Question[]> {
+  return prisma.question.findMany({
+    where: { sessionId },
+    orderBy: { upvotes: "desc" },
+  });
 }
 
-function getSessionQuestions(sessionId: string): Question[] {
-  return store.get(sessionId) ?? [];
-}
-
-export function listQuestions(sessionId: string): Question[] {
-  return [...getSessionQuestions(sessionId)].sort(
-    (a, b) => b.upvotes - a.upvotes
-  );
-}
-
-export function createQuestion(
+export async function createQuestion(
   sessionId: string,
-  dto: CreateQuestionDto,
-  isLive: boolean 
-): Question {
-  if (!isLive) {
-    throw new QuestionError(
-      "Cannot post questions outside of Live hours.",
-      403
-    );
+  dto: CreateQuestionDto
+): Promise<Question> {
+  const session = await prisma.session.findUnique({
+    where: { id: sessionId },
+  });
+
+  if (!session) {
+    throw new QuestionError("Session not found.", 404);
   }
 
-  const question: Question = {
-    id: generateId(),
-    content: dto.content,
-    authorName: dto.authorName ?? null,
-    upvotes: 0,
-    sessionId,
-    createdAt: new Date().toISOString(),
-  };
+  const now = new Date();
+  const isLive = now >= session.startTime && now <= session.endTime;
 
-  store.set(sessionId, [...getSessionQuestions(sessionId), question]);
-  questionIndex.set(question.id, question);
+  if (!isLive) {
+    throw new QuestionError("Cannot post questions outside of Live hours.", 403);
+  }
 
-  return question;
+  return prisma.question.create({
+    data: {
+      content: dto.content,
+      authorName: dto.authorName ?? null,
+      upvotes: 0,
+      sessionId,
+    },
+  });
 }
 
-export function upvoteQuestion(questionId: string): Question | null {
-  const question = questionIndex.get(questionId);
-  if (!question) return null;
+export async function upvoteQuestion(questionId: string): Promise<Question> {
+  const question = await prisma.question.findUnique({
+    where: { id: questionId },
+  });
 
-  question.upvotes += 1;
-  return question;
+  if (!question) {
+    throw new QuestionError(`Question ${questionId} not found.`, 404);
+  }
+
+  return prisma.question.update({
+    where: { id: questionId },
+    data: { upvotes: { increment: 1 } },
+  });
 }
