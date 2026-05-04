@@ -1,4 +1,4 @@
-import { Question, CreateQuestionDto, QuestionError } from "../types/Question";
+import { Question, CreateQuestionDto, QuestionError } from "../types/Question.js";
 
 const store = new Map<string, Question[]>(); 
 const questionIndex = new Map<string, Question>();
