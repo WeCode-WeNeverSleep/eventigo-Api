@@ -32,19 +32,30 @@ export const getSpeakerByIdController = async (req: Request, res: Response) => {
   try {
     const { speakerId } = req.params;
 
-    if (!speakerId) {
-      return res.status(400).json({ error: "speakerId is required" });
+    if (typeof speakerId !== "string") {
+      return res.status(400).json({ error: "Invalid speakerId" });
     }
 
-    const speaker = (await prisma.speaker.findUnique({
-      where: { id: speakerId },
-      include: {
-        sessions: {
-          include: { room: true },
-          orderBy: { startTime: "asc" },
+    let speaker: SpeakerWithSessions;
+    try {
+      speaker = (await prisma.speaker.findUnique({
+        where: { id: speakerId },
+        include: {
+          sessions: {
+            include: { room: true },
+            orderBy: { startTime: "asc" },
+          },
         },
-      },
-    })) as SpeakerWithSessions;
+      })) as SpeakerWithSessions;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+
+      if (message.toLowerCase().includes("uuid")) {
+        return res.status(400).json({ error: "Invalid speakerId" });
+      }
+
+      throw error;
+    }
 
     if (!speaker) {
       return res.status(404).json({ error: "Speaker not found" });
