@@ -91,3 +91,15 @@ export const createSpeakerController = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const getAllSpeakersController = async (req: Request, res: Response) => {
+  try {
+    const speakers = await SpeakerService.getAllSpeakers();
+
+    return res.status(200).json(speakers);
+  } catch {
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
