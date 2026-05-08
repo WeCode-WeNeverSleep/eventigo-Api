@@ -47,10 +47,7 @@ export class EventService {
     });
   }
 
-  static async createEvent(
-    organizerId: string,
-    data: CreateEventInput
-  ) {
+  static async createEvent( organizerId: string, data: CreateEventInput ) {
     const {
       title,
       description,
