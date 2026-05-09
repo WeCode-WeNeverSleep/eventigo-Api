@@ -11,7 +11,7 @@ export class AuthService {
         if (!isPasswordValid) return null;
 
         const token = jwt.sign(
-            { userId: user.id },
+            { id: user.id },
             process.env.JWT_SECRET as string,
             { expiresIn: '24h' }
         );

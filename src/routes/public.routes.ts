@@ -4,7 +4,8 @@ import {
   getEventByIdController,
   getEventsController,
 } from "../controllers/event.controller.js";
-import { getSpeakerByIdController } from "../controllers/speaker.controller.js";
+import { getAllSpeakersController, getSpeakerByIdController } from "../controllers/speaker.controller.js";
+import { getRoomsController } from "../controllers/room.controller.js";
 
 const router = Router();
 
@@ -16,5 +17,8 @@ router.post("/sessions/:sessionId/questions", postQuestion);
 router.post("/questions/:questionId/upvote", upvoteQuestionHandler);
 
 router.get("/speakers/:speakerId", getSpeakerByIdController);
+router.get("/speakers", getAllSpeakersController)
+
+router.get("/rooms", getRoomsController);
 
 export default router;

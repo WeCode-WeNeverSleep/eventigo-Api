@@ -1,6 +1,9 @@
 import type { Request, Response } from "express";
 import prisma from "../lib/prisma.js";
 import type { SessionWithRoom, SpeakerWithSessions } from "../types/speaker.js";
+import { createSpeakerSchema } from "../schemas/speaker.schema.js";
+import { SpeakerService } from "../services/speaker.service.js";
+import { ZodError } from "zod";
 
 const toExternalLinks = (links: unknown): string[] => {
   if (!Array.isArray(links)) return [];
@@ -65,5 +68,38 @@ export const getSpeakerByIdController = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Get Speaker By Id Error:", error);
     return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const createSpeakerController = async (req: Request, res: Response) => {
+  try {
+    const parsed = createSpeakerSchema.parse(req.body);
+
+    const speaker = await SpeakerService.createSpeaker(parsed);
+
+    return res.status(201).json(speaker);
+  } catch (error: unknown) {
+    if (error instanceof ZodError) {
+      return res.status(400).json({
+        message: "Validation error",
+        errors: error.issues,
+      });
+    }
+
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getAllSpeakersController = async (req: Request, res: Response) => {
+  try {
+    const speakers = await SpeakerService.getAllSpeakers();
+
+    return res.status(200).json(speakers);
+  } catch {
+    return res.status(500).json({
+      message: "Internal server error",
+    });
   }
 };
