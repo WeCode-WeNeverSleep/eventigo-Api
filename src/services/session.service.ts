@@ -43,3 +43,15 @@ export const createSession = async (
         data: sessionData,
     });
 };
+
+
+export const getSessionsByEvent = async (eventId: string) => {
+    return prisma.session.findMany({
+        where: {
+            eventId,
+        },
+        orderBy: {
+            startTime: "asc",
+        },
+    });
+};
