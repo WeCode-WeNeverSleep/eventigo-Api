@@ -55,3 +55,15 @@ export const getSessionsByEvent = async (eventId: string) => {
         },
     });
 };
+
+export const getSessionById = async (
+    eventId: string,
+    sessionId: string
+) => {
+    return prisma.session.findFirst({
+        where: {
+            id: sessionId,
+            eventId,
+        },
+    });
+};
