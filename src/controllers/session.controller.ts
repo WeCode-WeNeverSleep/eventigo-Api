@@ -40,3 +40,26 @@ export const createSessionHandler = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const getSessionsByEventHandler = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        const eventId = req.params.eventId;
+
+        if (typeof eventId !== "string") {
+            return res.status(400).json({
+                message: "Invalid eventId",
+            });
+        }
+
+        const sessions = await sessionService.getSessionsByEvent(eventId);
+
+        return res.status(200).json(sessions);
+    } catch (error: unknown) {
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+};
