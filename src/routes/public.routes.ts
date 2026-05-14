@@ -6,11 +6,14 @@ import {
 } from "../controllers/event.controller.js";
 import { getAllSpeakersController, getSpeakerByIdController } from "../controllers/speaker.controller.js";
 import { getRoomsController } from "../controllers/room.controller.js";
+import { getSessionsByEventHandler } from "../controllers/session.controller.js";
 
 const router = Router();
 
 router.get("/events", getEventsController);
 router.get("/events/:eventId", getEventByIdController);
+
+router.get("/events/:eventId/sessions", getSessionsByEventHandler);
 
 router.get("/sessions/:sessionId/questions", getQuestions);
 router.post("/sessions/:sessionId/questions", postQuestion);
