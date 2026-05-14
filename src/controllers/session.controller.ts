@@ -63,3 +63,38 @@ export const getSessionsByEventHandler = async (
         });
     }
 };
+
+export const getSessionByIdHandler = async (
+    req: Request,
+    res: Response
+) => {
+    try {
+        const { eventId, sessionId } = req.params;
+
+        if (
+            typeof eventId !== "string" ||
+            typeof sessionId !== "string"
+        ) {
+            return res.status(400).json({
+                message: "Invalid parameters",
+            });
+        }
+
+        const session = await sessionService.getSessionById(
+            eventId,
+            sessionId
+        );
+
+        if (!session) {
+            return res.status(404).json({
+                message: "Session not found",
+            });
+        }
+
+        return res.status(200).json(session);
+    } catch (error: unknown) {
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+};
