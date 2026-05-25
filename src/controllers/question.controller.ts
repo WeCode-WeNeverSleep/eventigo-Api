@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import type { CreateQuestionDto } from "../types/Question.js";
-import { listQuestions, createQuestion, upvoteQuestion } from "../services/question.service.js";
+import { listQuestions, createQuestion } from "../services/question.service.js";
 
 export async function getQuestions(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
@@ -26,12 +26,3 @@ export async function postQuestion(req: Request, res: Response, next: NextFuncti
   }
 }
 
-export async function upvoteQuestionHandler(req: Request, res: Response, next: NextFunction): Promise<void> {
-  try {
-    const questionId = req.params["questionId"] as string;
-    const updated = await upvoteQuestion(questionId);
-    res.status(200).json(updated);
-  } catch (err) {
-    next(err);
-  }
-}

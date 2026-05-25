@@ -1,5 +1,4 @@
 import prisma from "../lib/prisma.js";
-import { Prisma } from "@prisma/client";
 import type { CreateSessionInput } from "../schemas/session.schema.js";
 
 export const createSession = async (
@@ -16,7 +15,7 @@ export const createSession = async (
     speakerIds,
   } = data;
 
-  const sessionData: Prisma.SessionCreateInput = {
+  const sessionData = {
     title,
     startTime: new Date(startTime),
     endTime: new Date(endTime),
@@ -74,3 +73,22 @@ export const getSessionById = async (eventId: string, sessionId: string) => {
   });
 };
 
+export const findSessionById = async (sessionId: string) => {
+  return prisma.session.findUnique({
+    where: {
+      id: sessionId,
+    },
+  });
+};
+
+export const isSessionLive = async (sessionId: string): Promise<boolean> => {
+  const session = await findSessionById(sessionId);
+
+  if (!session) {
+    return false;
+  }
+
+  const now = new Date();
+
+  return now >= session.startTime && now <= session.endTime;
+};
