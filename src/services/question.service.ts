@@ -2,6 +2,12 @@ import type { CreateQuestionDto, Question } from "../types/Question.js";
 import { QuestionError } from "../types/Question.js";
 import prisma from "../lib/prisma.js";
 import { socketService } from "./socket.service.js";
+import type { PrismaClient } from "@prisma/client";
+
+type TransactionClient = Omit<
+  PrismaClient,
+  "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+>;
 
 type QuestionWithCount = {
   id: string;
@@ -42,7 +48,7 @@ export async function listQuestions(sessionId: string): Promise<Question[]> {
 
   return questions
     .map(formatQuestion)
-    .sort((a, b) => b.upvotes - a.upvotes);
+    .sort((a: Question, b:Question) => b.upvotes - a.upvotes);
 }
 
 export async function createQuestion(
@@ -95,7 +101,7 @@ export async function upvoteQuestion(
   userId: string
 ): Promise<Question> {
   try {
-    const question = await prisma.$transaction(async (tx) => {
+    const question = await prisma.$transaction(async (tx: TransactionClient) => {
       const existingQuestion = await tx.question.findUnique({
         where: { id: questionId },
       });

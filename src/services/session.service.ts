@@ -1,5 +1,4 @@
 import prisma from "../lib/prisma.js";
-import { Prisma } from "@prisma/client";
 import type { CreateSessionInput } from "../schemas/session.schema.js";
 
 export const createSession = async (
@@ -16,7 +15,7 @@ export const createSession = async (
     speakerIds,
   } = data;
 
-  const sessionData: Prisma.SessionCreateInput = {
+  const sessionData = {
     title,
     startTime: new Date(startTime),
     endTime: new Date(endTime),
