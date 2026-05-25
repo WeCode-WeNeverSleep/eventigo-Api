@@ -23,9 +23,9 @@ export const authenticateAdmin = (
             });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {id: string};
 
-        (req as any).admin = decoded;
+        req.user = decoded;
 
         next();
     } catch (error) {
