@@ -78,10 +78,23 @@ model Question {
   id         String  @id @default(uuid()) @db.Uuid
   content    String  @db.Text
   authorName String? @default("Anonyme")
-  upvotes    Int     @default(0)
 
   session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   sessionId String  @db.Uuid
 
+  upvoteList Upvote[]
+
   createdAt DateTime @default(now())
+}
+
+model Upvote {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String
+  questionId String   @db.Uuid
+
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, questionId])
 }
