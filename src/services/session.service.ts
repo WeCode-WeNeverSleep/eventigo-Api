@@ -74,3 +74,22 @@ export const getSessionById = async (eventId: string, sessionId: string) => {
   });
 };
 
+export const findSessionById = async (sessionId: string) => {
+  return prisma.session.findUnique({
+    where: {
+      id: sessionId,
+    },
+  });
+};
+
+export const isSessionLive = async (sessionId: string): Promise<boolean> => {
+  const session = await findSessionById(sessionId);
+
+  if (!session) {
+    return false;
+  }
+
+  const now = new Date();
+
+  return now >= session.startTime && now <= session.endTime;
+};
