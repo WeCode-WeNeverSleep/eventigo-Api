@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import prisma from "../lib/prisma.js";
-import type { SessionWithRoom, SpeakerWithSessions } from "../types/speaker.js";
-import { createSpeakerSchema } from "../schemas/speaker.schema.js";
+import type { SessionWithRoom, SpeakerWithSessions, SpeakerParams } from "../types/speaker.js";
+import { createSpeakerSchema, updateSpeakerSchema } from "../schemas/speaker.schema.js";
 import { SpeakerService } from "../services/speaker.service.js";
 import { ZodError } from "zod";
 
@@ -98,6 +98,54 @@ export const getAllSpeakersController = async (req: Request, res: Response) => {
 
     return res.status(200).json(speakers);
   } catch {
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const getAdminSpeakerByIdController = async (
+  req: Request<SpeakerParams>,
+  res: Response
+) => {
+  try {
+    const { speakerId } = req.params;
+
+    const speaker = await SpeakerService.getSpeakerById(speakerId);
+
+    if (!speaker) {
+      return res.status(404).json({
+        message: "Speaker not found",
+      });
+    }
+
+    return res.status(200).json(speaker);
+  } catch {
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const updateSpeakerController = async (
+  req: Request<SpeakerParams>,
+  res: Response
+) => {
+  try {
+    const { speakerId } = req.params;
+    const parsed = updateSpeakerSchema.parse(req.body);
+
+    const speaker = await SpeakerService.updateSpeaker(speakerId, parsed);
+
+    return res.status(200).json(speaker);
+  } catch (error) {
+    if (error instanceof ZodError) {
+      return res.status(400).json({
+        message: "Validation error",
+        errors: error.issues,
+      });
+    }
+
     return res.status(500).json({
       message: "Internal server error",
     });
