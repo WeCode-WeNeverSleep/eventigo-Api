@@ -1,5 +1,5 @@
 import prisma from "../lib/prisma.js";
-import type { CreateSessionInput } from "../schemas/session.schema.js";
+import type { CreateSessionInput, UpdateSessionInput } from "../schemas/session.schema.js";
 
 export const createSession = async (
   eventId: string,
@@ -91,4 +91,62 @@ export const isSessionLive = async (sessionId: string): Promise<boolean> => {
   const now = new Date();
 
   return now >= session.startTime && now <= session.endTime;
+};
+
+export const updateSession = async (
+  sessionId: string,
+  data: UpdateSessionInput,
+) => {
+  const {
+    title,
+    description,
+    startTime,
+    endTime,
+    roomId,
+    capacity,
+    speakerIds,
+  } = data;
+
+  return prisma.session.update({
+    where: {
+      id: sessionId,
+    },
+    data: {
+      ...(title !== undefined && { title }),
+      ...(description !== undefined && { description }),
+      ...(startTime !== undefined && {
+        startTime: new Date(startTime),
+      }),
+      ...(endTime !== undefined && {
+        endTime: new Date(endTime),
+      }),
+      ...(capacity !== undefined && { capacity }),
+
+      ...(roomId !== undefined && {
+        room: {
+          connect: {
+            id: roomId,
+          },
+        },
+      }),
+
+      ...(speakerIds !== undefined && {
+        speakers: {
+          set: speakerIds.map((id) => ({ id })),
+        },
+      }),
+    },
+  });
+};
+
+export const getAdminSessionById = async (
+  eventId: string,
+  sessionId: string,
+) => {
+  return prisma.session.findFirst({
+    where: {
+      id: sessionId,
+      eventId,
+    },
+  });
 };
