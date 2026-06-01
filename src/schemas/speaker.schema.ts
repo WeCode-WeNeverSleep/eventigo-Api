@@ -7,4 +7,7 @@ export const createSpeakerSchema = z.object({
   links: z.array(z.string().url()).optional(),
 });
 
+export const updateSpeakerSchema = createSpeakerSchema.partial();
+
 export type CreateSpeakerInput = z.infer<typeof createSpeakerSchema>;
+export type UpdateSpeakerInput = z.infer<typeof updateSpeakerSchema>;

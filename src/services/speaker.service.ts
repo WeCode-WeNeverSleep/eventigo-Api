@@ -1,6 +1,6 @@
 import type { Prisma } from "@prisma/client";
 import prisma from "../lib/prisma.js";
-import type { CreateSpeakerInput } from "../schemas/speaker.schema.js";
+import type { CreateSpeakerInput, UpdateSpeakerInput } from "../schemas/speaker.schema.js";
 
 export class SpeakerService {
     static async getAllSpeakers() {
@@ -30,6 +30,28 @@ export class SpeakerService {
 
         return prisma.speaker.create({
             data: speakerData,
+        });
+    }
+
+    static async getSpeakerById(speakerId: string) {
+        return prisma.speaker.findUnique({
+            where: {
+                id: speakerId,
+            },
+        });
+    }
+
+    static async updateSpeaker(speakerId: string, data: UpdateSpeakerInput) {
+        return prisma.speaker.update({
+            where: {
+                id: speakerId,
+            },
+            data: {
+                ...(data.fullName !== undefined && { fullName: data.fullName }),
+                ...(data.avatarUrl !== undefined && { avatarUrl: data.avatarUrl }),
+                ...(data.bio !== undefined && { bio: data.bio }),
+                ...(data.links !== undefined && { links: data.links }),
+            },
         });
     }
 }

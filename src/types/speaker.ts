@@ -16,3 +16,7 @@ export type SpeakerWithSessions = {
   links: unknown;
   sessions: SessionWithRoom[];
 } | null;
+
+export type SpeakerParams = {
+  speakerId: string;
+};
