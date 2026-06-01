@@ -136,17 +136,24 @@ export const updateSession = async (
         },
       }),
     },
+    include: {
+      room: true,
+      speakers: true,
+    },
   });
 };
 
 export const getAdminSessionById = async (
   eventId: string,
-  sessionId: string,
+  sessionId: string
 ) => {
   return prisma.session.findFirst({
     where: {
       id: sessionId,
       eventId,
+    },
+    include: {
+      speakers: true,
     },
   });
 };
