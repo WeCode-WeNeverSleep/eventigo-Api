@@ -5,6 +5,13 @@ import type { CreateEventInput, UpdateEventInput } from "../schemas/event.schema
 export class EventService {
   static async getEvents() {
     return await prisma.event.findMany({
+      include: {
+        _count: {
+          select: {
+            sessions: true,
+          },
+        },
+      },
       orderBy: {
         startDate: "asc",
       },
@@ -69,22 +76,22 @@ export class EventService {
   }
 
   static async updateEvent(id: string, data: UpdateEventInput) {
-  const start = data.startDate ? new Date(data.startDate) : undefined;
-  const end = data.endDate ? new Date(data.endDate) : undefined;
+    const start = data.startDate ? new Date(data.startDate) : undefined;
+    const end = data.endDate ? new Date(data.endDate) : undefined;
 
-  if (start && end && end <= start) {
-    throw new Error("Invalid date range");
+    if (start && end && end <= start) {
+      throw new Error("Invalid date range");
+    }
+
+    return await prisma.event.update({
+      where: { id },
+      data: {
+        ...(data.title !== undefined && { title: data.title }),
+        ...(data.description !== undefined && { description: data.description }),
+        ...(start !== undefined && { startDate: start }),
+        ...(end !== undefined && { endDate: end }),
+        ...(data.location !== undefined && { location: data.location }),
+      },
+    });
   }
-
-  return await prisma.event.update({
-    where: { id },
-    data: {
-      ...(data.title !== undefined && { title: data.title }),
-      ...(data.description !== undefined && { description: data.description }),
-      ...(start !== undefined && { startDate: start }),
-      ...(end !== undefined && { endDate: end }),
-      ...(data.location !== undefined && { location: data.location }),
-    },
-  });
-}
 }
