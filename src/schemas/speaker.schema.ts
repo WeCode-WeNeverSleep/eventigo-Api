@@ -1,0 +1,13 @@
+import { z } from "zod";
+
+export const createSpeakerSchema = z.object({
+  fullName: z.string().min(1),
+  avatarUrl: z.string().url().optional(),
+  bio: z.string().optional(),
+  links: z.array(z.string().url()).optional(),
+});
+
+export const updateSpeakerSchema = createSpeakerSchema.partial();
+
+export type CreateSpeakerInput = z.infer<typeof createSpeakerSchema>;
+export type UpdateSpeakerInput = z.infer<typeof updateSpeakerSchema>;
