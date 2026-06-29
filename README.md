@@ -93,7 +93,7 @@ npm run db:generate
 
 ## Contributors
 
-### Rindra — [`rindraniaina`](https://github.com/rindraniaina)
+### Rindra — `STD24069` [`rindraniaina`](https://github.com/rindraniaina)
 *Prisma schema, event routes, Socket.IO, build fixes, delete endpoints*
 - Initial Prisma schema (6 models, migrations)
 - Public event routes (`GET /events`, `GET /events/:eventId`)
@@ -102,7 +102,7 @@ npm run db:generate
 - Delete endpoints (events, sessions, rooms, speakers)
 - Production build fixes
 
-### Jessy — [`jessyrand`](https://github.com/jessyrand)
+### Jessy — `STD24004` [`jessyrand`](https://github.com/jessyrand)
 *Project setup, auth, full CRUD, live monitoring*
 - Project initialization (Express, tsconfig, Prisma config)
 - JWT authentication (login, middleware, service)
@@ -117,14 +117,14 @@ npm run db:generate
 - WebSocket security (live session validation)
 - Various fixes (timezone, TypeScript, build)
 
-### Manda — [`Manda Tiavina`](https://github.com/MandaTiavina)
+### Manda — `STD24083` [`Manda Tiavina`](https://github.com/MandaTiavina)
 *Speaker routes, types & mappers, README*
 - Public route `GET /speakers/:speakerId`
 - Speaker types and response mapper
 - Route alignment after merges
 - Project README
 
-### Mayah — [`mayahNeko`](https://github.com/mayahNeko)
+### Mayah — `STD24156` [`mayahNeko`](https://github.com/mayahNeko)
 *Q&A system, error handling*
 - Question domain types and interfaces
 - Question service (list, create, upvote)
