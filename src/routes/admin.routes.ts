@@ -20,12 +20,14 @@ import {
   getRoomByIdController,
   getRoomsController,
   updateRoomController,
+  deleteRoomController,
 } from "../controllers/room.controller.js";
 import {
   createSpeakerController,
   getAdminSpeakerByIdController,
   getAllSpeakersController,
   updateSpeakerController,
+  deleteSpeakerController,
 } from "../controllers/speaker.controller.js";
 
 const router = Router();
@@ -44,6 +46,7 @@ router.get("/rooms", getRoomsController);
 router.get("/rooms/:roomId", getRoomByIdController);
 router.post("/rooms", createRoomController);
 router.put("/rooms/:roomId", updateRoomController);
+router.delete("/rooms/:roomId", deleteRoomController);
 
 router.post("/events/:eventId/sessions", createSessionHandler);
 router.get("/events/:eventId/sessions", getSessionsByEventHandler);
@@ -55,5 +58,6 @@ router.get("/speakers", getAllSpeakersController);
 router.get("/speakers/:speakerId", getAdminSpeakerByIdController);
 router.post("/speakers", createSpeakerController);
 router.put("/speakers/:speakerId", updateSpeakerController);
+router.delete("/speakers/:speakerId", deleteSpeakerController);
 
 export default router;

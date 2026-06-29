@@ -54,4 +54,10 @@ export class SpeakerService {
             },
         });
     }
+
+    static async deleteSpeaker(speakerId: string) {
+        return prisma.speaker.delete({
+            where: { id: speakerId },
+        });
+    }
 }
