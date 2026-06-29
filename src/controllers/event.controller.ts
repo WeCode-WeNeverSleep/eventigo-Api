@@ -1,7 +1,10 @@
 import type { Request, Response } from "express";
 import { ZodError } from "zod";
 
-import { createEventSchema, updateEventSchema } from "../schemas/event.schema.js";
+import {
+  createEventSchema,
+  updateEventSchema,
+} from "../schemas/event.schema.js";
 import { EventService } from "../services/event.service.js";
 import type { EventParams } from "../types/event.js";
 
@@ -45,10 +48,7 @@ export const createEventController = async (req: Request, res: Response) => {
 
     const parsed = createEventSchema.parse(req.body);
 
-    const event = await EventService.createEvent(
-      organizerId,
-      parsed
-    );
+    const event = await EventService.createEvent(organizerId, parsed);
 
     return res.status(201).json(event);
   } catch (error: unknown) {
@@ -59,10 +59,7 @@ export const createEventController = async (req: Request, res: Response) => {
       });
     }
 
-    if (
-      error instanceof Error &&
-      error.message === "Invalid date range"
-    ) {
+    if (error instanceof Error && error.message === "Invalid date range") {
       return res.status(400).json({
         message: error.message,
       });
@@ -76,7 +73,7 @@ export const createEventController = async (req: Request, res: Response) => {
 
 export const getAdminEventByIdController = async (
   req: Request<EventParams>,
-  res: Response
+  res: Response,
 ) => {
   try {
     const { eventId } = req.params;
@@ -99,7 +96,7 @@ export const getAdminEventByIdController = async (
 
 export const updateEventController = async (
   req: Request<EventParams>,
-  res: Response
+  res: Response,
 ) => {
   try {
     const { eventId } = req.params;
@@ -116,10 +113,7 @@ export const updateEventController = async (
       });
     }
 
-    if (
-      error instanceof Error &&
-      error.message === "Invalid date range"
-    ) {
+    if (error instanceof Error && error.message === "Invalid date range") {
       return res.status(400).json({
         message: error.message,
       });
@@ -130,3 +124,19 @@ export const updateEventController = async (
     });
   }
 };
+
+export const deleteEventController = async (
+  req: Request<EventParams>,
+  res: Response,
+) => {
+  try {
+    const { eventId } = req.params;
+    await EventService.deleteEvent(eventId);
+    return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+

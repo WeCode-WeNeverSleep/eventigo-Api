@@ -151,3 +151,18 @@ export const updateSpeakerController = async (
     });
   }
 };
+
+export const deleteSpeakerController = async (
+  req: Request<SpeakerParams>,
+  res: Response
+) => {
+  try {
+    const { speakerId } = req.params;
+    await SpeakerService.deleteSpeaker(speakerId);
+    return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
