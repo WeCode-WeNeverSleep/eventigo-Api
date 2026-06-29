@@ -5,6 +5,7 @@ import {
   getAdminSessionByIdHandler,
   getSessionsByEventHandler,
   updateSessionHandler,
+  deleteSessionHandler,
 } from "../controllers/session.controller.js";
 import { authenticateAdmin } from "../middlewares/auth.middleware.js";
 import {
@@ -48,6 +49,7 @@ router.post("/events/:eventId/sessions", createSessionHandler);
 router.get("/events/:eventId/sessions", getSessionsByEventHandler);
 router.get("/events/:eventId/sessions/:sessionId", getAdminSessionByIdHandler);
 router.put("/events/:eventId/sessions/:sessionId", updateSessionHandler);
+router.delete("/events/:eventId/sessions/:sessionId", deleteSessionHandler);
 
 router.get("/speakers", getAllSpeakersController);
 router.get("/speakers/:speakerId", getAdminSpeakerByIdController);
@@ -55,4 +57,3 @@ router.post("/speakers", createSpeakerController);
 router.put("/speakers/:speakerId", updateSpeakerController);
 
 export default router;
-

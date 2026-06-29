@@ -1,5 +1,8 @@
 import prisma from "../lib/prisma.js";
-import type { CreateSessionInput, UpdateSessionInput } from "../schemas/session.schema.js";
+import type {
+  CreateSessionInput,
+  UpdateSessionInput,
+} from "../schemas/session.schema.js";
 
 export const createSession = async (
   eventId: string,
@@ -145,7 +148,7 @@ export const updateSession = async (
 
 export const getAdminSessionById = async (
   eventId: string,
-  sessionId: string
+  sessionId: string,
 ) => {
   return prisma.session.findFirst({
     where: {
@@ -157,3 +160,10 @@ export const getAdminSessionById = async (
     },
   });
 };
+
+export const deleteSession = async (sessionId: string) => {
+  return prisma.session.delete({
+    where: { id: sessionId },
+  });
+};
+
