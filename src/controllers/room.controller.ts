@@ -84,3 +84,18 @@ export const updateRoomController = async (
     });
   }
 };
+
+export const deleteRoomController = async (
+  req: Request<RoomParams>,
+  res: Response
+) => {
+  try {
+    const { roomId } = req.params;
+    await RoomService.deleteRoom(roomId);
+    return res.status(204).send();
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};

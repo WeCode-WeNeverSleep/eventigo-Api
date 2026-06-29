@@ -94,4 +94,10 @@ export class EventService {
       },
     });
   }
+
+  static async deleteEvent(id: string) {
+    return await prisma.event.delete({
+      where: { id },
+    });
+  }
 }
