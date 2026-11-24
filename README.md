@@ -93,7 +93,7 @@ npm run db:generate
 
 ## Contributors
 
-### Rindra — `STD24069` [`rindraniaina`](https://github.com/rindraniaina)
+### Rindra — `STD24069` [`rindra17`](https://github.com/rindra17)
 *Prisma schema, event routes, Socket.IO, build fixes, delete endpoints*
 - Initial Prisma schema (6 models, migrations)
 - Public event routes (`GET /events`, `GET /events/:eventId`)
